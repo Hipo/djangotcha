@@ -1,6 +1,6 @@
 from django.conf.urls import url, include, patterns
 from django.contrib import admin
-from views import BenchmarkDashboard
+from gotcha.views import BenchmarkDashboard
 
 urlpatterns = patterns('',
     # Admin
