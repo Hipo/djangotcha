@@ -13,5 +13,11 @@ class BenchmarkDashboard(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'gotcha.html', {})
 
-    def post(self, request, *args, **kwargs):        
-        return render(request, 'gotcha.html', {})
+
+class UrlRetrieve(View):
+    @method_decorator(user_passes_test(lambda user: user.is_superuser, login_url='/admin'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UrlRetrieve, self).dispatch(request, args, kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'chart_gotcha.html', {'url_id': self.kwargs['url_id']})

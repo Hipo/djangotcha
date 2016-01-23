@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gotcha'
+    'gotcha',
+    'corsheaders',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -38,6 +39,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'djangotcha.urls'
@@ -90,6 +93,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ORIGIN_WHITELIST = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -121,5 +127,5 @@ TEMPLATE_DIRS = (
     PROJECT_PATH + '/gotcha/templates/'
 )
 
-STATIC_ROOT = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'media/')
+STATIC_ROOT = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'static/')
 STATIC_URL = '/static/'

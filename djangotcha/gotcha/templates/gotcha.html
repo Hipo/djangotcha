@@ -3,6 +3,11 @@
 
 {% block title %} Gotcha | API Benchmark for Django {{ block.super }}{% endblock %}
 
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+{% endblock %}
+
 {% block content %}
 
     <div class="container-fluid">
@@ -87,11 +92,119 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <footer>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
-    </footer>
+{% block extrajs %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+    <script type="text/javascript">
+        (function($){
+            var token = 'dc61660cefcaab414581a46a';
+            var application_id = '56a37dbd2cd1700e04ee9d84';
+            var gotcha_client = 'http://gotcha.hipo.biz'
+            var app_base_url = gotcha_client + '/api/applications/' + application_id;
+
+            $.get('http://crossorigin.me/' + app_base_url + '/urls?token='+ token, function(response){
+                var urls = JSON.parse(response);
+                //<a href="/applications/56a37dbd2cd1700e04ee9d84/urls/56a393ad2cd170528b31410a">naber</a>
+                var compiled = _.template('<% _.forEach(urls, function(url) { %>  <tr><td><a href="<%= url.Id %>"><%= url.Title %></a></td><td><A href=<%= url.Url %>><%= url.Url.substring(0, 50) %></a></td><td><%= url.Faster %></td><td><%= (url.Last * 1000).toFixed(3) %>ms</td></td><td><%= (url.Previous * 1000).toFixed(3)%>ms</td><td><%= url.Time %></td><td><%= url.Status %></td><td><button data-id="<%= url.Id %>" class=" remove glyphicon glyphicon-remove" aria-hidden="true"></button></td></tr><% }); %>');
+
+                $('.urls').append((compiled({ 'urls': urls})));
+                
+                $('.remove').on('click', function(element){
+                    var removeUrlId = element.target.dataset.id
+
+                    $.ajax({
+                        url: gotcha_client + '/urls/' + removeUrlId + '/?token=' + token,
+                        type: 'DELETE',
+                        complete: function(){
+                            window.location.reload();
+                        }
+                    });
+                });
+            });
+
+            $('#fetchUrls').on('click', function(){
+                $.get('http://crossorigin.me/' + app_base_url + '/fetch?token='+ token, function(response){
+                    window.location.reload();
+                });
+            });
+
+            $('.submit-url').on('click', function(){
+                debugger;
+                var data = {"url": $('#url').val(), "title": $("#title").val()}
+
+                $.ajax({
+                    url: app_base_url + '/urls?token=' + token,
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    complete: function(response){
+
+                    }
+                });
+
+                $('.submit-callback').on('click', function(){
+                    var data = {"callbackurl": $('#callback-url').val()}
+                    $.ajax({
+                        url: app_base_url + '/addcallback?token=' + token,
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json",
+                        complete: function(){
+
+                        }
+                    });
+                });
+
+                $.get('http://crossorigin.me/' + app_base_url + '/fetch?token='+ token, function(response){
+                    window.location.reload();
+                });
+            });
+        })(jQuery);
+    </script>
+
+    <script type="text/javascript">
+        // $(function(){
+        //     var token = Cookies.get('gotcha_token')
+        //     var compiled = _.template('<% _.forEach(records, function(record) { %>  <tr><td><%= record.Time %></td> <td><%= record.StatusCode %></td> <td><%= record.DateCreated %></td></tr><% }); %>');
+
+        //     $.get('/api/applications/{{.ApplicationId.Hex}}/urls/{{.Id.Hex}}?token='+ token, function(response){
+        //         var records = JSON.parse(response);
+        //         // Ad this data to table
+        //         $('.records').append((compiled({'records': records})))
+        
+        //         // Collect chart data
+        //         chartData = []
+        //         $.each(records, function(i, url_record){
+        //             chartData[i] = {
+        //                 date: url_record["DateCreated"],
+        //                 time: url_record["Time"]
+        //             };
+        //         });
+
+        //         setTimeout(function(){
+        //             new Morris.Line({
+        //                 // ID of the element in which to draw the chart.
+        //                 element: 'urlDetailChart',
+        //                 // Chart data records -- each entry in this array corresponds to a point on
+        //                 // the chart.
+        //                 data: chartData,
+        //                 // The name of the data record attribute that contains x-values.
+        //                 xkey: 'date',
+        //                 // A list of names of data record attributes that contain y-values.
+        //                 ykeys: ['time'],
+        //                 // Labels for the ykeys -- will be displayed when you hover over the
+        //                 // chart.
+        //                 labels: ['Response Time']
+        //             });
+        //         }, 100);
+        //     });
+        // });
+    </script>
 {% endblock %}
