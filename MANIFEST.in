@@ -1,0 +1,5 @@
+include LICENSE
+include README.md
+recursive-include djangotcha/static *
+recursive-include djangotcha/templates *
+recursive-include djangotcha/templatetags *

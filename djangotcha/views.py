@@ -11,7 +11,7 @@ class BenchmarkDashboard(View):
         return super(BenchmarkDashboard, self).dispatch(request, args, kwargs)
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'gotcha.html', {})
+        return render(request, 'djangotcha/gotcha.html', {})
 
 
 class UrlRetrieve(View):
@@ -20,4 +20,4 @@ class UrlRetrieve(View):
         return super(UrlRetrieve, self).dispatch(request, args, kwargs)
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'chart_gotcha.html', {'url_id': self.kwargs['url_id']})
+        return render(request, 'djangotcha/chart_gotcha.html', {'url_id': self.kwargs['url_id']})

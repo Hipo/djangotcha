@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static gotcha_tags %}
+
+{% block title %} Gotcha | API Benchmark for Django {{ block.super }}{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 main">
+            <h1 class="page-header">Url Response Benchmark</h1>
+            <h2 class="sub-header"><a href="{{.Url}}" target="_blank">{{.Url}}</a></h2>
+        </div>
+      </div>
+    </div>
+    <div id="urlDetailChart" style="height: 250px;"></div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Response Time</th>
+                    <th>Status Code</th>
+                    <th>Date Created</th>
+                </tr>
+            </thead>
+            <tbody class="records"></tbody>
+        </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript">
+        var GOTCHA_APP_ID = "{% get_gotcha_application_id %}";
+        var GOTCHA_TOKEN = "{% get_gotcha_token %}";
+    </script>
+    <script src="{% static 'djangotcha/chart.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static gotcha_tags %}
+{% block title %} Gotcha | API Benchmark for Django {{ block.super }}{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 main">
+                <h1 class="page-header">GOTCHA - Dashboard</h1>
+                <h2 class="sub-header">{{.Name}}</h2>
+
+                <button  id='fetchUrls' class='btn btn-lg btn-primary'>Fetch URLs</button>
+                <button data-toggle="modal" id="addUrl" data-target=".bs-example-modal-lg" class='btn btn-lg btn-danger'>Add URL</button>
+                <button data-toggle="modal" id="callBack" data-target=".modal2" class='btn btn-lg btn-primary'>Add Callback</button>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Url</th>
+                                <th>Faster</th>
+                                <th>Last</th>
+                                <th>Previous</th>
+                                <th>Time</th>
+                                <th>Status Code </th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody class="urls"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">New URL</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">Title</label>
+                            <input type="text" class="form-control" id="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Url</label>
+                            <input type='text' class="form-control" id="url"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="submit-url btn btn-primary">Add URL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">New Callback</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">Callback URL</label>
+                            <input type="text" class="form-control" id="callback-url">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="submit-callback btn btn-primary">Add Callback</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script type="text/javascript">
+        var GOTCHA_APP_ID = "{% get_gotcha_application_id %}";
+        var GOTCHA_TOKEN = "{% get_gotcha_token %}";
+    </script>
+    <script src="{% static 'djangotcha/core.js' %}"></script>
+{% endblock %}
